@@ -1,8 +1,0 @@
-ansible-core==2.11.6
-Jinja2==2.11.3
-MarkupSafe==1.1.1
-ansible==2.10.5
-sphinxmark==0.2.0
-pyroute2==0.7.12
-netaddr==0.10.1
-setuptools==81.0.0

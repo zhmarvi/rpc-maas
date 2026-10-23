@@ -1,12 +1,15 @@
 #!/bin/bash
 
+set -e
+
 egrep -q -i 'Centos|RedHat|Rocky' /etc/redhat-release 2>/dev/null && isRH=true || isRH=false
 egrep -q -i proxy /etc/apt/apt.conf 2>/dev/null && hasProxy=true || hasProxy=false
 
 # Install some dependancies
 if [ $isRH == true ]; then
-  rpm -qi python3-pip python3-virtualenv > /dev/null
-  test $? -ne 0 && dnf -y install python3-pip python3-virtualenv
+  if ! rpm -qi python3-pip python3-virtualenv > /dev/null; then
+    dnf -y install python3-pip python3-virtualenv
+  fi
 
   # Update the python alternatives if needed
   if [ ! -e /usr/bin/python ]; then
@@ -38,7 +41,8 @@ fi
 export ANSIBLE_COLLECTIONS_PATHS="${ANSIBLE_COLLECTIONS_PATHS:-/root/ansible_venv/}"
 export ANSIBLE_COLLECTIONS_PATH="${ANSIBLE_COLLECTIONS_PATH:-/root/ansible_venv/}"
 
-pip install -r /opt/rpc-maas/requirements.txt
+python3 -m pip install -r /opt/rpc-maas/playbooks/files/bootstrap-requirements.txt
+python3 -m pip install -r /opt/rpc-maas/requirements.txt
 ansible-playbook /opt/rpc-maas/scripts/get-ansible-collection-requirements.yml
 
 deactivate

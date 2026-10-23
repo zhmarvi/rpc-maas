@@ -1,1 +1,12 @@
-### Requirements for RAX-MaaS
+# rpc-maas venv constraints for Ubuntu 22.04 / Python 3.10.
+# Keep these separate from OpenStack-Ansible's /opt/ansible-runtime constraints.
+# Monitorstack uses Click 7's resultcallback API.
+click==7.1.2
+Jinja2==3.1.6
+MarkupSafe==3.0.4
+cryptography==50.0.2
+pyOpenSSL==26.4.0
+requests==2.34.2
+urllib3==2.8.0
+pyasn1==0.6.4
+PyYAML==6.0.3

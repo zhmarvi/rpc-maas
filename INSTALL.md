@@ -1,15 +1,5 @@
 # rpc-maas Install docs
 
-## Zed / Ubuntu 22.04 assessment
-
-The `eom-zed` branch targets evaluation against upstream OpenStack-Ansible
-`zed-eom` (26.5.3) on Ubuntu 22.04 / Python 3.10. The exact source refs,
-Ansible 2.13.4 reference pin, known CVEs and dependency conflicts are recorded
-in [the Zed assessment](security-audits/eom-zed/README.md). This assessment
-does not change the installation requirements below or establish deployment
-compatibility. Upstream Zed and Ansible 2.13 are no longer maintained; their
-published pins are reference evidence, not security upgrade recommendations.
-
 ## Overview
 
 RedHat OSP16, OSA changes for python3 are made into this branch.
@@ -24,6 +14,52 @@ Checkout the ***python2*** branch for all release below OSP16 or OpenStack Ussur
 MTC is replaced with a shell script that sets up ***/root/ansible_venv*** used for the installation.
 Apart from the removal of MTC the internal documentation can still be used for everything else.
 * [internal monitoring docs](https://pages.github.rackspace.com/rpc-internal/docs-rpc/master/rpc-monitoring-internal/index.html)
+
+## Dependency updates on `eom-zed`
+
+The primary deployment target is Ubuntu 22.04 with Python 3.10 on the controller
+and monitoring hosts, against upstream OpenStack-Ansible Zed. The Python
+packages below belong to rpc-maas's own virtual environments. Do not install
+them into OSA's `/opt/ansible-runtime` or apply OSA's full constraints file to
+the monitoring environment.
+
+| Component | Updated requirement |
+|---|---|
+| Controller Ansible | `ansible-core==2.13.13`, replacing 2.11.6; stays in Zed's 2.13 series, newer than upstream `zed-eom`'s 2.13.4 pin |
+| Templates | `Jinja2==3.1.6`, `MarkupSafe==3.0.4`, replacing Jinja2<3 and MarkupSafe 1.1.1 |
+| Venv tools | pip 26.2.2, setuptools 84.2.1 and wheel 0.48.0, shared through `playbooks/files/bootstrap-requirements.txt` |
+| Monitoring API | `rackspace-monitoring==0.8.1`, now pinned for controller and agent |
+| CLI compatibility | `click==7.1.2`; Monitorstack requires its `resultcallback` API, which Click 8 removed |
+| Network helpers | pyroute2 0.9.6 and netaddr 1.3.0, replacing 0.7.12 and 0.10.1 |
+| Other agent helpers | mitogen 0.3.54, ipaddr 2.2.0, python-memcached 1.62, pyudev 0.24.5, dnspython 2.8.0, lxml 6.1.3 and distro 1.9.0 |
+| Shared dependency constraints | cryptography 50.0.2, pyOpenSSL 26.4.0, requests 2.34.2, urllib3 2.8.0, pyasn1 0.6.4 and PyYAML 6.0.3, when required |
+| Check documentation | Reuses root `requirements.txt` instead of installing the separate Ansible 2.10.5 distribution |
+| Tox dependency configuration | Uses local rpc-maas constraints and controller requirements, with the `zed-eom` tests ref instead of Wallaby; avoids Zed test-deps' separate Ansible 2.12.8 pin |
+
+`requirements.txt` and the default agent install consume
+`playbooks/files/pip-constraints.txt`. A constraint limits a package version;
+it does not install that package by itself. These files constrain selected
+dependencies, rather than locking the entire dependency graph. Monitorstack
+and Waxeye still use their existing upstream `master` refs. Optional Rally
+retains its separate constraints and needs separate validation.
+
+Run `scripts/prepare.sh` to update the controller environment. It now installs
+the shared venv tools before the controller requirements and stops on an
+installation failure. Monitoring venv creation uses the same tool versions and
+requires Python 3.10 or newer. Existing Python 2 / older Python environments
+must be migrated before using these defaults. The Ansible 2.13 controller is
+specifically tested here on Python 3.10. Run tox with a Python 3.10 interpreter;
+its default Zed test harness and local constraints are selected independently
+of OSA's deployed environment.
+
+Validation used separate controller and agent venvs on Python 3.10.22/macOS:
+package installation and `pip check`, Ansible/Jinja templating, Rackspace driver
+imports, Monitorstack CLI/plugin imports, and Ansible 2.13 syntax checks for
+the collection bootstrap and main site playbook passed. Linux-specific agent
+operations and deployment against Ubuntu 22.04/Zed still require integration
+testing. These updates do not establish a CVE-free deployment: Zed and Ansible
+2.13 are no longer maintained, and the legacy Monitorstack dependency chain
+still needs security maintenance.
 
 ## Download rpc-maas
 

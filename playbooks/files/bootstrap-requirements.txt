@@ -1,0 +1,4 @@
+# Shared controller/agent venv tooling for Python 3.10 or newer.
+pip==26.2.2
+setuptools==84.2.1
+wheel==0.48.0

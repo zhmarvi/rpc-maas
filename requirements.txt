@@ -1,5 +1,7 @@
-ansible-core==2.11.6
-MarkupSafe==1.1.1
-Jinja2<3.0
-click
-rackspace-monitoring
+# rpc-maas controller: Ubuntu 22.04 / Python 3.10, Zed-era Ansible.
+-c playbooks/files/pip-constraints.txt
+ansible-core==2.13.13
+MarkupSafe==3.0.4
+Jinja2==3.1.6
+click==7.1.2
+rackspace-monitoring==0.8.1

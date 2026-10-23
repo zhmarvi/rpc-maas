@@ -13,10 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Verify the MaaS runtime Python version
+  assert:
+    that:
+      - ansible_python.version.major | int == 3
+      - ansible_python.version.minor | int >= 10
+    fail_msg: "MaaS requires Python 3.10 or newer; Ubuntu 22.04 is the primary target."
+
 - name: Copy over pip requirement
   copy:
     src: "files/pip-constraints.txt"
     dest: "/tmp/pip-constraints.txt"
+
+- name: Copy over venv bootstrap requirements
+  copy:
+    src: "files/bootstrap-requirements.txt"
+    dest: "/tmp/maas-bootstrap-requirements.txt"
 
 - name: Install required pip packages
   package:
@@ -78,9 +90,7 @@
 
     - name: Setup MaaS venv
       pip:
-        name:
-          - pip
-          - "{%- if ansible_python.version.major == 2 -%}setuptools<45{% else %}setuptools==81.0.0{% endif %}"
+        requirements: "/tmp/maas-bootstrap-requirements.txt"
         extra_args: >-
           -U --isolated
           {{ pip_install_options | default('') }}
