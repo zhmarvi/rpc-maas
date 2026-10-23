@@ -1,0 +1,7 @@
+[ERROR]: Vars in a Play must be specified as a dictionary.
+Origin: /Users/zain0655/Documents/ChatGPT/rpc-maas/playbooks/maas-remove-old-templates.yml:21:5
+
+19   become: true
+20   vars:
+21     - confd_dir: /etc/rackspace-monitoring-agent.conf.d
+       ^ column 5

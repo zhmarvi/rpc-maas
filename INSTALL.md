@@ -1,5 +1,15 @@
 # rpc-maas Install docs
 
+## Zed / Ubuntu 22.04 assessment
+
+The `eom-zed` branch targets evaluation against upstream OpenStack-Ansible
+`zed-eom` (26.5.3) on Ubuntu 22.04 / Python 3.10. The exact source refs,
+Ansible 2.13.4 reference pin, known CVEs and dependency conflicts are recorded
+in [the Zed assessment](security-audits/eom-zed/README.md). This assessment
+does not change the installation requirements below or establish deployment
+compatibility. Upstream Zed and Ansible 2.13 are no longer maintained; their
+published pins are reference evidence, not security upgrade recommendations.
+
 ## Overview
 
 RedHat OSP16, OSA changes for python3 are made into this branch.

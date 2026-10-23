@@ -1,0 +1,14 @@
+{
+  "target_os": "Ubuntu 22.04 LTS (Jammy)",
+  "target_python": "3.10",
+  "deployment_model": "Controller runs on Ubuntu 22.04 locally",
+  "osa_repository": "https://opendev.org/openstack/openstack-ansible",
+  "osa_ref": "zed-eom",
+  "osa_version": "26.5.3",
+  "osa_commit": "6d4d953d645dbd0abbfff5cb19892810884c7edb",
+  "requirements_repository": "https://opendev.org/openstack/requirements",
+  "requirements_commit": "9c379d80fceba448eebe6c3121184435b49c48ec",
+  "ansible_core": "2.13.4",
+  "upstream_status": "Unmaintained / end of maintenance",
+  "scope": "Source-reference baseline and overlapping Python packages, not installed host evidence; no vendor fork supplied."
+}
